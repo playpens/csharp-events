@@ -14,15 +14,18 @@ namespace Publisher
     public static async void Start()
     {
 
-      var url = "https://localhost:44371/events";
+      var url = "https://localhost:44371/signalr";
 
       HubConnection connection = new HubConnectionBuilder()
         .WithUrl(url)
         .WithAutomaticReconnect()
         .Build();
 
+      var t = connection.StartAsync();
+      t.Wait();
+
       // send a message to the hub
-      await connection.InvokeAsync("SendMessage", "publisher", "Message from the publisher app");
+      await connection.InvokeAsync("Lights", "publisher", "Message from the publisher app");
     }
 
   }

@@ -48,7 +48,7 @@ namespace Server
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapRazorPages();
-        endpoints.MapHub<EventHub>("/events");
+        endpoints.MapHub<EventHub>("/signalr");
       });
 
       Console.WriteLine("Configured!");

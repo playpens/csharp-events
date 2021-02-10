@@ -8,10 +8,16 @@ namespace Server
 {
   public class EventHub : Hub
   {
-    public async Task SendMessage(string user, string message)
+    public override async Task OnConnectedAsync()
+    {
+      Console.WriteLine($"Welcome, {Context.ConnectionId}");
+      await base.OnConnectedAsync();
+    }
+
+    public async Task Lights(string user, string message)
     {
       Console.WriteLine($"Got Message {message}");
-      await Clients.All.SendAsync("message", user, message);
+      await Clients.All.SendAsync("TurnLightsOn", user, message);
     }
   }
 }

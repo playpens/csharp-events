@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿//using Microsoft.AspNet.SignalR.Client;
+using Microsoft.AspNetCore.SignalR.Client;
 using System;
+using System.Threading.Tasks;
 
 namespace Client
 {
@@ -14,21 +16,29 @@ namespace Client
     public static async void Start()
     {
 
-      var url = "https://localhost:44371/events";
+      try
+      {
+        var url = "https://localhost:44371/signalr";
 
-      HubConnection connection = new HubConnectionBuilder()
-        .WithUrl(url)
-        .WithAutomaticReconnect()
-        .Build();
+        HubConnection connection = new HubConnectionBuilder()
+          .WithUrl(url)
+          .WithAutomaticReconnect()
+          .Build();
 
-      // receive a message from the hub
-      connection.On<string, string>("message", (user, message) => OnReceiveMessage(user, message));
+        connection.On<string, string>("TurnLightsOn", (user, message) => OnReceiveMessage(user, message));
 
-      var t = connection.StartAsync();
+        var t = connection.StartAsync();
+        t.Wait();
 
-      t.Wait();
+        Console.WriteLine($"Connected ... ID: {connection.ConnectionId}");
 
-      Console.ReadLine();
+        Console.ReadLine();
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine("Never Connected");
+        Console.WriteLine(e.Message);
+      }
     }
 
     private static void OnReceiveMessage(string user, string message)
